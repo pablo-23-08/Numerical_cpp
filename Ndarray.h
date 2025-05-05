@@ -2,6 +2,8 @@
 #include <vector>
 #include <numeric>
 #include <iomanip>
+//~ #include <initializer_list>
+#include "NDInitializer.h"
 
 class Ndarray
 {
@@ -19,4 +21,10 @@ class Ndarray
 		static Ndarray arange(int size);
 		Ndarray reshape(const std::vector<size_t>& new_shape)const;
 		void print()const;
+		static Ndarray array(const NDInitializer& init);
+		//~ static Ndarray array(std::initializer_list<std::initializer_list<double>> values);
+		//~ static Ndarray array(std::initializer_list<std::initializer_list<std::initializer_list<double>>> values);
+		//~ template<typename T>
+		//~ static Ndarray array(std::initializer_list<T> values);
+
 };

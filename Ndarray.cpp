@@ -1,3 +1,5 @@
+//~ #include "Ndarray.h"
+
 Ndarray::Ndarray(const std::vector<size_t>& dimensions)
 {
 	shape=dimensions;
@@ -20,6 +22,16 @@ Ndarray Ndarray::arange(int size)
         a.data[i]=static_cast<double>(i);
     }
     return a;
+}
+
+Ndarray Ndarray::array(const NDInitializer& init) {
+    if (init.data.empty()) {
+        std::cerr << "ValueError: empty array input" << std::endl;
+        exit(1);
+    }
+    Ndarray result(init.shape);
+    result.data = init.data;
+    return result;
 }
 
 Ndarray Ndarray::reshape(const std::vector<size_t>& new_shape)const
@@ -135,3 +147,50 @@ void Ndarray::print()const
     print_array(0,0,0,max_width);
     std::cout<<"\n\n";
 }
+
+//~ Ndarray Ndarray::array(std::initializer_list<std::initializer_list<std::initializer_list<double>>> values) {
+    //~ size_t depth = values.size();
+    //~ size_t rows = values.begin()->size();
+    //~ size_t cols = values.begin()->begin()->size();
+    
+    //~ Ndarray result({depth, rows, cols});
+    
+    //~ size_t i = 0;
+    //~ for (const auto& layer : values) {
+        //~ size_t j = 0;
+        //~ for (const auto& row : layer) {
+            //~ size_t k = 0;
+            //~ for (double val : row) {
+                //~ result.data[i * rows * cols + j * cols + k] = val;
+                //~ k++;
+            //~ }
+            //~ j++;
+        //~ }
+        //~ i++;
+    //~ }
+    //~ return result;
+//~ }
+
+//~ template<typename T>
+//~ Ndarray Ndarray::array(std::initializer_list<T> values) {
+    //~ std::vector<size_t> shape;
+    //~ std::vector<double> flat_data;
+
+    //~ std::function<void(std::initializer_list<T>, size_t)> extract_shape;
+    //~ extract_shape = [&](std::initializer_list<T> current_list, size_t depth) {
+        //~ if (depth >= shape.size()) shape.push_back(current_list.size());
+        //~ for (const auto& elem : current_list) {
+            //~ if constexpr (std::is_same_v<T, double>) {
+                //~ flat_data.push_back(elem);
+            //~ } else {
+                //~ extract_shape(elem, depth + 1);
+            //~ }
+        //~ }
+    //~ };
+
+    //~ extract_shape(values, 0);
+    
+    //~ Ndarray result(shape);
+    //~ result.data = flat_data;
+    //~ return result;
+//~ }
