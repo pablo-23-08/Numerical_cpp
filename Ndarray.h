@@ -2,6 +2,7 @@
 #include <vector>
 #include <numeric>
 #include <iomanip>
+#include <limits>
 #include "NDInitializer.h"
 
 class Ndarray
@@ -19,7 +20,15 @@ class Ndarray
 		Ndarray(const std::vector<size_t>& dimensions);
 		static Ndarray arange(int size);
 		static Ndarray array(const NDInitializer& init);
+		static Ndarray zeros(const std::vector<size_t>& dimensions);
+		static Ndarray ones(const std::vector<size_t>& dimensions);
 		Ndarray reshape(const std::vector<size_t>& new_form)const;
 		void print()const;
 		void shape()const;
+		void size()const;
+		Ndarray operator+(const Ndarray& other)const;
+		Ndarray operator-(const Ndarray& other)const;
+		Ndarray operator*(const Ndarray& other)const;
+		Ndarray operator/(const Ndarray& other)const;
+		
 };

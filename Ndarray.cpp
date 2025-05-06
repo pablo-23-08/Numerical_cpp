@@ -16,12 +16,12 @@ Ndarray Ndarray::arange(int size)
 {
 	size_t t=static_cast<size_t>(size);
 	int i;
-    Ndarray a({t});
+    Ndarray result({t});
     for(i=0;i<size;++i)
     {
-        a.data[i]=static_cast<double>(i);
+        result.data[i]=static_cast<double>(i);
     }
-    return a;
+    return result;
 }
 
 Ndarray Ndarray::array(const NDInitializer& init)
@@ -160,4 +160,95 @@ void Ndarray::shape()const
 			std::cout<<", ";
 	}
 	std::cout<<")\n\n";
+}
+
+void Ndarray::size()const
+{
+	std::cout<<total_size<<"\n\n";
+}
+
+Ndarray Ndarray::zeros(const std::vector<size_t>& dimensions)
+{
+	return Ndarray(dimensions);
+}
+
+Ndarray Ndarray::ones(const std::vector<size_t>& dimensions)
+{
+	Ndarray result(dimensions);
+	for(size_t i=0;i<result.total_size;++i)
+	{
+        result.data[i]=1.0;
+    }
+	return result;
+}
+
+Ndarray Ndarray::operator+(const Ndarray& other)const
+{
+    if(form!=other.form)
+    {
+        std::cerr<<"ValueError:formes des tableaux incompatibles pour l'addition.";
+        exit(1);
+    }
+    Ndarray result(form);
+    for(size_t i=0;i<total_size;++i)
+    {
+        result.data[i]=data[i]+other.data[i];
+    }
+    return result;
+}
+
+Ndarray Ndarray::operator-(const Ndarray& other)const
+{
+    if(form!=other.form)
+    {
+        std::cerr<<"ValueError:formes des tableaux incompatibles pour la soustraction.";
+        exit(1);
+    }
+    Ndarray result(form);
+    for(size_t i=0;i<total_size;++i)
+    {
+        result.data[i]=data[i]-other.data[i];
+    }
+    return result;
+}
+
+Ndarray Ndarray::operator*(const Ndarray& other)const
+{
+    if(form!=other.form)
+    {
+        std::cerr<<"ValueError:formes des tableaux incompatibles pour la multiplication.";
+        exit(1);
+    }
+    Ndarray result(form);
+    for(size_t i=0;i<total_size;++i)
+    {
+        result.data[i]=data[i]*other.data[i];
+    }
+    return result;
+}
+
+Ndarray Ndarray::operator/(const Ndarray& other)const
+{
+    if(form!=other.form)
+    {
+        std::cerr<<"ValueError:formes des tableaux incompatibles pour la division.";
+        exit(1);
+    }
+    Ndarray result(form);
+    for(size_t i=0;i<total_size;++i)
+    {
+		if(other.data[i]==0.0)
+        {
+            //la division par zéro donne Inf ou -Inf(selon le signe du numérateur) ou NaN si 0/0
+            if(data[i]==0.0)
+                result.data[i]=std::numeric_limits<double>::quiet_NaN();//NaN pour 0/0
+            else if(data[i]>0.0)
+                result.data[i]=std::numeric_limits<double>::infinity();//Inf pour positif/0
+            else
+                result.data[i]=-std::numeric_limits<double>::infinity();//-Inf pour négatif/0
+        }
+        else
+			result.data[i]=data[i]/other.data[i];
+    }
+    return result;
 }
